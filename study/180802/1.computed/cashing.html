@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>03-06</title>
+<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+</head>
+<body>
+<div id="example">
+   <input type="text" v-model="name"/>
+   <input type="text" id="surname" value="snow"/>
+   <button @click="saveSurname">캐싱데이터 삽입</button>
+   <output>{{computedFullName}}</output>
+
+</div>
+<script type="text/javascript">
+
+let surname = 'snow'; //캐싱할 데이터를 담는 변수
+var vm = new Vue({
+    el : "#example",
+    data:{
+		name:'John'
+	},
+	computed:{
+		computedFullName(){
+			console.log('변화감지')
+			console.log('name',this.name,'\n','surname',surname)
+ 			return this.name + ' ' + surname
+		}
+	},
+	methods:{
+		saveSurname(){
+			surname= this.$el.querySelector('#surname').value
+		}
+	}
+})
+</script>
+</body>
+</html>
