@@ -1,3 +1,9 @@
+
+자동화된 Javascript 테스트를 처음 접하기 시작할 때, 단위 테스트(Unit testing), TDD(Test-Driven Development), BDD(Behavior-Driven Development)라는 단어들에 대해 많은 사람들이 이야기하고 있음을 발견할 수 있다
+
+
+
+
 프레임워크:개발자들의 개발 생산성을 높이기 위해 일정한 틀과 규칙에 따라 개발하도록 미리 구조를 정의해 놓은 도구
 라이브러리:자주 사용되는 기능들을 모아 재활용할 수 있도록 정리한 기술 모음집
 
@@ -282,3 +288,153 @@ v-for 디렉티브를 사용할 때 지정하는 게 좋다.
 (가상돔)
 예를들어 돔에서 목록 순서를 제어하는 경우, 목록아이템이 1000개가 있을때 두번째 목록 아이템을 지우면 나머지 998개의 아이템이 모두 한번씩 이동해야하기때문에 화면을 다시 그려야 하는 브라우저 입장에서는 
 목록 아이템이 많으면 많을수록 랜더링 부담이 된다. 하지만 뷰 프레임워크에서 순서를 제어하는 경우 두 번째 아이템을 삭제 했을때 나머지 목록을 움직이지 않고, 내부적으로 아이템의 순서만 재조정하여 돔 이동을 최소화한다.
+
+
+
+
+
+
+
+뷰의 반응성
+
+
+뷰의 인스턴스 생성하는시점 data속성에 정의된 객체를 getter,setter형태로 변환(사용자접근불가, 프레임워크 내부로직)(브라우저마다 다르게처리됨, 그래서 확장프로그램vue-devtools설치 권장)-> (data속성의 setter가 트리거되면)화면 갱신속성인 watcher속성으로 가상돔으로 화면을 다시구성
+
+(인스턴스를 생성하는시점에 data속성의 반응성이 정의되기때문에, 인스턴스를 생성하고 난후에 data속성에 객체를 추가하면 반응성이 없다 ) == whatcher속성이 실행되지않는다
+
+그러나 Vue.set(object, key, value) 메소드를 사용하여 중첩 된 객체에 반응성 속성을 추가 할 수 있다
+ex)Vue.set(vm.someObject, 'b', 2)
+
+Vm.$set 인스턴스 메소드를 사용할 수도 있습니다. 이 메소드는 전역 Vue.set 에 대한 별칭입니다.
+ex)this.$set(this.someObject, 'b', 2)
+ 
+
+<참고:https://kr.vuejs.org/v2/guide/reactivity.html
+Vue 인스턴스에 JavaScript 객체를 data 옵션으로 전달하면 Vue는 모든 속성에 Object.defineProperty를 사용하여 getter/setter로 변환합니다. 이는 Vue가 ES5를 사용할 수 없는 IE8 이하를 지원하지 않는 이유입니다.
+>
+
+
+
+
+
+
+npm run dev를 원래는 dist라는 빌드된 폴더로 보여줘야 하나, 컴퓨터 메모리에 저장해서 보여준다, 
+이유는 컴퓨터 파일읅 쓰고 읽는시간보다 메모리가 빠르다.
+
+
+
+
+
+ resolve: {
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js'
+    },
+    extensions: ['*', '.js', '.vue', '.json']
+  },
+
+
+웹팩으로 빌드할때 뷰 라이브러리의 여러 유형중 어떤것을 선택할지 선택.
+vue.esm.js는 최신 웹팩 버전과 사용할 수 있는 Full 버전의 라이브러리
+
+
+
+  devServer: {
+    historyApiFallback: true,
+    noInfo: true,
+    overlay: true
+  },
+
+historyApiFallback 클라이언트 사이드 라우팅인 뷰 라우터와 함께 사용하기위해서는 true
+noInfo는 처음시작할때만 웹팩 빌드 정보를 보여주고, 변경시에는 안보여줌
+overlay속성 웹팩빌드 오류일때 브라우저 화면에 전체 오류 표시
+
+
+
+  performance: {
+    hints: false
+  },
+
+웹팩 빌드파일의 크기가 250kb를 넘으면 경고메시지를 표시할지 설정.
+hints가 false이므로 표시되지않음
+
+
+
+  devtool: '#eval-source-map'
+
+웹팩으로 빌드된 파일로 웹 앱을 구동했을 때 개발자 도구에서 사용할 디버깅 방식을 지정
+
+
+
+
+
+
+그냥 install 하면 ./node_modules 디렉터리에 패키지 설치를 하고 끝. --save, --save-dev 옵션은 ./package.json 업데이트를 같이해준다. 
+
+어디에 패키지 정보를 추가하느냐가 다른데,
+
+ --save 옵션은 dependencies object에 추가하고        (뷰 코어라이브러리)
+
+--save-dev 옵션은 devDepenencies object에 추가한다.     (웹팩 관련라이브러리)
+
+dependencies와 devDepenencies 차이는 npm install을 할 때 나타난다. dependencies는 항상 설치되고 devDepenencies는 --production 옵션을 붙이면 빠진다. 
+
+npm install “$package” 명령어로 설치할 때는 --dev 옵션을 붙여야지만 설치된다.
+
+
+
+
+
+
+
+vue를 제이쿼리처럼 사용하기
+
+
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+  <script src="C:/Users/leewoo/AppData/Roaming/EditPlus/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.2/vue.js"></script>
+ </head>
+ <body>
+<div id="app">
+	<button v-on:click="clickBtn">
+		시작	
+	</button>
+	<p ref="pEl"></p>
+
+</div>	
+
+  <script>
+  var vm = new Vue({
+  el:'#app',
+  data: {
+    // 빈 값으로 메시지를 선언 합니다.
+    message: ''
+  },
+  methods:{
+	clickBtn:function(){
+	this.$refs.pEl.innerText='vue'
+	}
+ }
+})
+ 
+  </script>
+ </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

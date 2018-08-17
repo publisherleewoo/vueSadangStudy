@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import todoapp from './components/todoapp/'
+import todoapp from './components/todoapp/index.vue'
  export default {
    name:"app",
    components:{
