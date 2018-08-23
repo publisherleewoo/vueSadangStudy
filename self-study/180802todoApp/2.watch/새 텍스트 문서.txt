@@ -1,0 +1,7 @@
+computed는 return값이 있어야하며, 화면의 변화에 적합하다.
+
+watch는 뷰단의 결정적인 변화에 관심이없기때문에 ajax(비동기통신)에 적합하다.
+
+
+결론:V의 변화 = computed
+VM의 변화 = watch
