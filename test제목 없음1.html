@@ -12,14 +12,26 @@
  </head>
  <body>
 <div id="app">
-	<button v-on:click="clickBtn">
+	<button @click="clickBtn">
 		시작	
 	</button>
+	<abc></abc>
 	<p ref="pEl"></p>
+	<p ref="a"></p>
 
 </div>	
 
   <script>
+	Vue.component('abc',{
+	template:'<button @click="aaa">hi</button>',
+	methods:{
+		aaa(){
+			
+
+		}
+		}
+	})
+
   var vm = new Vue({
   el:'#app',
   data: {
@@ -28,7 +40,7 @@
   },
   methods:{
 	clickBtn:function(){
-	this.$refs.pEl.innerText='vue'
+		console.log(this.$refs)
 	}
 	}
 })
