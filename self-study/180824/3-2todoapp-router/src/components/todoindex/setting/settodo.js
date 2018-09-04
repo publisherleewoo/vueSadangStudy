@@ -31,6 +31,7 @@ var addTodo = function (val) {
 }
 
 var removeTodo = function (item) {
+  
   var keyVal = item.k;
   var todoItems = this.todoItems;
   todoItems.forEach(function (item, index) {
@@ -39,7 +40,12 @@ var removeTodo = function (item) {
     }
   });
   localStorage.removeItem(keyVal);
+  
+  if(this.todoCount==="All"){
+    this.listDetailTodo="All";
+  }
   this.listDetailTodo = parseInt(this.todoCount)
+  
 }
 
 var clearAll = function () {

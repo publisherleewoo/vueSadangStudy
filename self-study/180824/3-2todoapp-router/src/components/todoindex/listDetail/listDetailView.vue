@@ -38,6 +38,7 @@ export default {
       set(newValue) {
         if (newValue === "All") {
           this.view = true;
+        
           return (this.viewtodoItems = this.todoItems);
         } else {
           this.view = false;
