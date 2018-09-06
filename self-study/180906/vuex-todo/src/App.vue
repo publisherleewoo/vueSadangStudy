@@ -14,15 +14,6 @@ import TodoList from "./components/TodoList.vue";
 import TodoFooter from "./components/TodoFooter.vue";
 
 export default {
- 
-
-  created() {
-    // if (localStorage.length > 0) {
-    //   for (var i = 0; i < localStorage.length; i++) {
-    //     this.$store.state.todoItems.push(localStorage.key(i));
-    //   }
-    // }
-  },
   components: {
     TodoHeader: TodoHeader,
     TodoInput: TodoInput,
