@@ -2,12 +2,13 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import A from '../components/A.vue'
 import B from '../components/B.vue'
-import C from '../components/C.vue'
+import contactsList from '../components/contactsList.vue'
 
 Vue.use(VueRouter)
 
 const router = new VueRouter({
-  routes: [{
+  routes: [
+    {
       name: "A",
       path: '/A',
       component: A
@@ -18,11 +19,10 @@ const router = new VueRouter({
       component: B
     },
     {
-      name: "C",
-      path: '/C',
-      component: C
+      name: "contactsList",
+      path: '/contactsList',
+      component: contactsList
     },
-
   ]
 })
 
