@@ -14,7 +14,7 @@
                     <slot name="name"></slot>
                     <slot name="tel"></slot>
                     <slot name="address"></slot>
-                    <slot name="img"></slot>
+                    <slot name="photo"></slot>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -26,15 +26,17 @@
 </template>
 
 <script>
- 
 export default {
   name: "modalComponent",
   props: ["popupType"],
- 
- 
+
   methods: {
     submit() {
-      this.$emit("addContact");
+      if (this.popupType === "add") {
+        this.$emit("addContact");
+      } else {
+        this.$emit("updateContact");
+      }
     }
   }
 };
