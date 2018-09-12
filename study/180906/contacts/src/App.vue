@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-
     <h1>Bootstrap heading</h1>
     <router-link class="btn btn-outline-secondary" to="/A">Go to A</router-link>
     <router-link class="btn btn-outline-secondary" to="/B">Go to B</router-link>
@@ -30,4 +29,6 @@ h1 {
 a {
   margin: 0 10px 30px 10px;
 }
+
+.ir{position:absolute; left:-9999px; top:0;}
 </style>

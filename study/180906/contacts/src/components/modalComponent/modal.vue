@@ -10,11 +10,9 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <slot name="no"></slot>
-                    <slot name="name"></slot>
-                    <slot name="tel"></slot>
-                    <slot name="address"></slot>
-                    <slot name="photo"></slot>
+                    <slot name="add"></slot>
+                    <slot name="update"></slot>
+                    <slot name="updatePhoto"></slot>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -32,10 +30,21 @@ export default {
 
   methods: {
     submit() {
-      if (this.popupType === "add") {
-        this.$emit("addContact");
-      } else {
-        this.$emit("updateContact");
+      switch (this.popupType) {
+        case "add":
+          this.$emit("addContact");
+          break;
+
+        case "update":
+          this.$emit("updateContact");
+          break;
+
+        case "updatePhoto":
+          this.$emit("updatePhoto");
+          break;
+
+        default:
+          break;
       }
     }
   }

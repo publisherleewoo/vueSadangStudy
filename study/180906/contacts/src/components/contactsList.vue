@@ -25,7 +25,7 @@
           <td>{{contact.name}}</td>
           <td>{{contact.tel}}</td>
           <td>{{contact.address}}</td>
-          <td><img :src="contact.photo" class="img-thumbnail rounded mx-auto d-block"></td>
+          <td><img @click="updatePhotoPopup(contact)" data-toggle="modal" data-target="#exampleModal" :src="contact.photo" class="img-thumbnail rounded mx-auto d-block"></td>
           <td>
             <div @click="popupName('update',contact)">
               <button type="button" data-toggle="modal" data-target="#exampleModal">
@@ -37,17 +37,39 @@
         </tr>
       </tbody>
     </table>
-    <modalComponent :popupType="popupType" @addContact="addContact" @updateContact="updateContact">
-      <p slot="no" v-if="popupType==='update'">
-        <label for="no">번호:</label><input type="text" id="no" :value="currentContact.no" readonly></p>
-      <p slot="name">
-        <label for="name">이름:</label><input type="text" id="name" :value="currentContact.name" ref="iptName"></p>
-      <p slot="tel">
-        <label for="tel">전화번호:</label><input type="text" id="tel" :value="currentContact.tel" ref="iptTel"></p>
-      <p slot="address">
-        <label for="address">주소:</label><input type="text" id="address" :value="currentContact.address" ref="iptAddress"></p>
-      <p slot="photo" v-if="popupType==='update'">
-        <label for="photo">이미지:</label><input type="text" id="photo" :value="currentContact.photo" ref="iptPhoto"></p>
+
+    <modalComponent :popupType="popupType" @addContact="addContact" @updateContact="updateContact" @updatePhoto="updatePhoto">
+      <div slot="add" v-if="this.popupType==='add'">
+        <p>
+          <label for="name">이름:</label>
+          <input type="text" id="name" :value="currentContact.name" ref="iptName"></p>
+        <p>
+          <label for="tel">전화번호:</label><input type="text" id="tel" :value="currentContact.tel" ref="iptTel"></p>
+        <p>
+          <label for="address">주소:</label><input type="text" id="address" :value="currentContact.address" ref="iptAddress"></p>
+
+      </div>
+
+      <div slot="update" v-else-if="this.popupType==='update'">
+        <p>
+          <label for="no">번호:</label><input type="text" id="no" :value="currentContact.no" readonly></p>
+        <p>
+          <label for="name">이름:</label><input type="text" id="name" :value="currentContact.name" ref="iptName"></p>
+        <p>
+          <label for="tel">전화번호:</label><input type="text" id="tel" :value="currentContact.tel" ref="iptTel"></p>
+        <p>
+          <label for="address">주소:</label><input type="text" id="address" :value="currentContact.address" ref="iptAddress"></p>
+
+      </div>
+
+      <div slot="updatePhoto" v-else>
+        <figure>
+          <figcaption class="ir">현재 사진</figcaption>
+          <img :src="currentContact.photo">
+        </figure>
+        <label class="ir" for="file">변환사진선택</label>
+        <input type="file" id="file">
+      </div>
     </modalComponent>
   </div>
 </template>
@@ -138,7 +160,31 @@ export default {
           console.log("ERROR!!!!!!!!!!!!!!!!!", err);
         });
     },
+    updatePhotoPopup: function(contact) {
+      this.popupType = "updatePhoto";
+      this.currentContact = contact;
+    },
+    updatePhoto() {
+      var file = document.getElementById("file").files[0];
+      var data = new FormData();
+      data.append("photo", file);
+      this.$axios
+        .post(
+          "http://sample.bmaster.kro.kr/contacts/" +
+            this.currentContact.no +
+            "/photo",
+          data
+        )
+        .then(response => {
+          $("#exampleModal").modal("hide");
+          this.renderGetData();
+        })
+        .catch(err => {
+          console.log("ERROR!!!!!!!!!!!!!!!!!", err);
+        });
+    },
     deleteContact(no) {
+      if(confirm('삭제하실겁니까?')){
       this.$refs.square.classList.add("on");
       this.$axios
         .delete("http://sample.bmaster.kro.kr/contacts/" + no)
@@ -149,13 +195,22 @@ export default {
         .catch(err => {
           console.log("ERROR!!!!!!!!!!!!!!!!!", err);
         });
+      }
     },
     popupName(value, contact) {
       this.popupType = value;
-      if (this.popupType === "add") {
-        this.currentContactInit();
-      } else {
-        this.currentContact = contact;
+
+      switch (this.popupType) {
+        case "add":
+          this.currentContactInit();
+          break;
+
+        case "update":
+          this.currentContact = contact;
+          break;
+
+        default:
+          break;
       }
     }
   }
@@ -205,6 +260,7 @@ table td {
 
 img.img-thumbnail {
   max-width: 100px;
+  cursor: pointer;
 }
 
 @media all and (max-width: 680px) {
@@ -216,4 +272,9 @@ img.img-thumbnail {
 button {
   float: left;
 }
+input:read-only {
+  background: gray;
+}
+
+figure img{width:128px; height:128px;}
 </style>
