@@ -15,7 +15,6 @@ export default {
 </script>
 
 <style>
-ul{list-style:none}
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -27,7 +26,9 @@ ul{list-style:none}
 h1 {
   margin: 30px 0;
 }
- 
+a {
+  margin: 0 10px 30px 10px;
+}
 
 .ir{position:absolute; left:-9999px; top:0;}
 </style>

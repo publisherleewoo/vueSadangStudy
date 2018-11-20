@@ -47,6 +47,7 @@
           <label for="tel">전화번호:</label><input type="text" id="tel" :value="currentContact.tel" ref="iptTel"></p>
         <p>
           <label for="address">주소:</label><input type="text" id="address" :value="currentContact.address" ref="iptAddress"></p>
+
       </div>
 
       <div slot="update" v-else-if="this.popupType==='update'">
@@ -58,6 +59,7 @@
           <label for="tel">전화번호:</label><input type="text" id="tel" :value="currentContact.tel" ref="iptTel"></p>
         <p>
           <label for="address">주소:</label><input type="text" id="address" :value="currentContact.address" ref="iptAddress"></p>
+
       </div>
 
       <div slot="updatePhoto" v-else>
@@ -69,22 +71,6 @@
         <input type="file" id="file">
       </div>
     </modalComponent>
-    <ul>
-      <li><a href="#none">처음</a></li>
-      <li><a href="#none">이전</a></li>
-      <li><a href="#none">1</a></li>
-      <li><a href="#none">2</a></li>
-      <li><a href="#none">3</a></li>
-      <li><a href="#none">4</a></li>
-      <li><a href="#none">5</a></li>
-      <li><a href="#none">6</a></li>
-      <li><a href="#none">7</a></li>
-      <li><a href="#none">8</a></li>
-      <li><a href="#none">9</a></li>
-      <li><a href="#none">10</a></li>
-      <li><a href="#none">다음</a></li>
-      <li><a href="#none">끝</a></li>
-    </ul>
   </div>
 </template>
 
@@ -107,9 +93,11 @@ export default {
     };
   },
   components: { modalComponent },
+
   created() {
     this.renderGetData();
   },
+
   methods: {
     currentContactInit() {
       this.currentContact = {
@@ -121,75 +109,55 @@ export default {
       };
     },
     addContact() {
+      this.$refs.square.classList.add("on");
       let name = this.$refs.iptName.value;
-
-      switch (name.trim()) {
-        case "":
-          alert("이름값은 필수입니다");
-          break;
-
-        default:
-          if (this.$refs.square.classList.add) {
-            this.$refs.square.classList.add("on");
-          } else {
-            $(".square").addClass("on");
-          }
-
-          this.$axios
-            .post("http://sample.bmaster.kro.kr/contacts", {
-              name: this.$refs.iptName.value,
-              tel: this.$refs.iptTel.value,
-              address: this.$refs.iptAddress.value
-            })
-            .then(res => {
-              this.renderGetData();
-              this.crossBrwosing();
-              $("#exampleModal").modal("hide");
-            })
-            .catch(err => {
-              console.log("ERROR1", err);
-            });
-          break;
+      if (name !== "") {
+        this.$axios
+          .post("http://sample.bmaster.kro.kr/contacts", {
+            name: this.$refs.iptName.value,
+            tel: this.$refs.iptTel.value,
+            address: this.$refs.iptAddress.value
+          })
+          .then(res => {
+            $("#exampleModal").modal("hide");
+            this.renderGetData();
+          })
+          .catch(err => {
+            console.log("ERROR!!!!!!!!!!!!!!!!!", err);
+          });
+      } else {
+        alert("이름값은 필수입니다");
       }
     },
     renderGetData() {
       this.$axios
-        .get("http://sample.bmaster.kro.kr/contacts?pageno=1")
+        .get("http://sample.bmaster.kro.kr/contacts")
         .then(res => {
-          console.log(res)
           this.contacts = res.data.contacts;
-          if (this.$refs.square.classList.add) {
-            this.$refs.square.classList.remove("on");
-          } else {
-            $(".square").removeClass("on");
-          }
+          this.$refs.square.classList.remove("on");
         })
         .catch(err => {
-          console.log("ERROR2", err);
+          console.log("ERROR!!!!!!!!!!!!!!!!", err);
         });
     },
     updateContact() {
-      if (this.$refs.square.classList.add) {
-        this.$refs.square.classList.add("on");
-      } else {
-        $(".square").addClass("on");
-      }
+      this.$refs.square.classList.add("on");
       this.$axios
         .put(
           "http://sample.bmaster.kro.kr/contacts/" + this.currentContact.no,
           {
             name: this.$refs.iptName.value,
             tel: this.$refs.iptTel.value,
-            address: this.$refs.iptAddress.value
+            address: this.$refs.iptAddress.value,
+            photo: this.$refs.iptPhoto.value
           }
         )
         .then(res => {
-          this.renderGetData();
-          this.crossBrwosing();
           $("#exampleModal").modal("hide");
+          this.renderGetData();
         })
         .catch(err => {
-          console.log("ERROR3", err);
+          console.log("ERROR!!!!!!!!!!!!!!!!!", err);
         });
     },
     updatePhotoPopup: function(contact) {
@@ -208,31 +176,25 @@ export default {
           data
         )
         .then(response => {
-          this.renderGetData();
-          this.crossBrwosing();
           $("#exampleModal").modal("hide");
+          this.renderGetData();
         })
         .catch(err => {
-          console.log("ERROR4", err);
+          console.log("ERROR!!!!!!!!!!!!!!!!!", err);
         });
     },
     deleteContact(no) {
-      if (confirm("삭제하실겁니까?")) {
-        if (this.$refs.square.classList.add) {
-          this.$refs.square.classList.add("on");
-        } else {
-          $(".square").addClass("on");
-        }
-        this.$axios
-          .delete("http://sample.bmaster.kro.kr/contacts/" + no)
-          .then(res => {
-            this.renderGetData();
-            this.crossBrwosing();
-            $("#exampleModal").modal("hide");
-          })
-          .catch(err => {
-            console.log("ERROR5", err);
-          });
+      if(confirm('삭제하실겁니까?')){
+      this.$refs.square.classList.add("on");
+      this.$axios
+        .delete("http://sample.bmaster.kro.kr/contacts/" + no)
+        .then(res => {
+          $("#exampleModal").modal("hide");
+          this.renderGetData();
+        })
+        .catch(err => {
+          console.log("ERROR!!!!!!!!!!!!!!!!!", err);
+        });
       }
     },
     popupName(value, contact) {
@@ -249,12 +211,6 @@ export default {
 
         default:
           break;
-      }
-    },
-    crossBrwosing() {
-      var userAgent = navigator.userAgent.toLowerCase();
-      if (userAgent.indexOf("chrome") <= -1) {
-        window.location.reload();
       }
     }
   }
@@ -287,6 +243,7 @@ export default {
   -webkit-animation-iteration-count: infinite;
   -webkit-animation-timing-function: linear;
 }
+
 @-webkit-keyframes spin {
   from {
     -webkit-transform: rotate(0deg);
@@ -295,14 +252,17 @@ export default {
     -webkit-transform: rotate(360deg);
   }
 }
+
 table th,
 table td {
   vertical-align: middle !important;
 }
+
 img.img-thumbnail {
   max-width: 100px;
   cursor: pointer;
 }
+
 @media all and (max-width: 680px) {
   table td,
   table th {
@@ -315,13 +275,6 @@ button {
 input:read-only {
   background: gray;
 }
-figure img {
-  width: 128px;
-  height: 128px;
-}
 
-li{display:inline-block}
-a {
-  margin: 0 5px 30px 5px;
-}
+figure img{width:128px; height:128px;}
 </style>
