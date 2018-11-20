@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+  <script src="C:/Users/leewoo/AppData/Roaming/EditPlus/jquery.min.js"></script>
+ </head>
+ <body>
+  <script>
+  // 레코드값
+// 0    "Enter uid1234 Muzi", 
+// 1    "Enter uid4567 Prodo",
+// 2    "Leave uid1234",
+// 3    "Enter uid1234 Prodo",
+// 4    "Change uid4567 Ryan"
+
+var obj = [
+     "Enter uid1234 Muzi", 
+     "Enter uid4567 Prodo",
+     "Leave uid1234",
+     "Enter uid1234 Prodo",
+     "Change uid4567 Ryan"
+] 
+
+
+
+function solution(record) {
+    var zz = []; 
+	var answer = [];
+
+
+
+
+
+    for(var result in record){
+		
+        var target = record[result].split(" ");
+
+	 
+		switch(target[0]){
+			case "Enter":	
+			answer.push(target[1]+"님이 "+target[2]+"로 입장하셨습니다")
+			break;
+			
+			case "Leave":
+			var id = target[1]
+			answer.push(id+"님이 나가셨습니다")
+			break;
+
+			case "Change":
+			var id = target[1];
+			answer.push(id+"님이 아이디를 "+target[2]+"로 바꿨습니다")
+					
+
+			break;
+
+			
+		}
+		
+    }
+    
+console.log(answer)
+	 
+
+   
+    return zz;
+}
+
+
+var  value = solution(obj)
+
+console.log(value)
+
+
+  </script>
+ </body>
+</html>
